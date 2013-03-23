@@ -1,6 +1,6 @@
 ## Glutton Pinboard
 
-A simple wrapper for the [pinboard.in](http://pinboard.in) API.
+A simple Ruby wrapper for the [pinboard.in](http://pinboard.in) API.
 
 The following methods have been implemented:
 
