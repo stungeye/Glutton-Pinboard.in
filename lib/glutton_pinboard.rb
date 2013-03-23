@@ -1,7 +1,6 @@
 require 'httparty'
 require 'glutton_ratelimit'
 
-
 class GluttonPinboard
   include HTTParty
   extend GluttonRatelimit
