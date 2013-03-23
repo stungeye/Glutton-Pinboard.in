@@ -29,6 +29,10 @@ class GluttonPinboard
     q('/tags/get')['tags']['tag']
   end
   
+  def posts_all
+    q('/posts/all')['posts']['post']
+  end
+  
   def raise_errors( response, method, options )
     case response.code.to_i
       when 400
