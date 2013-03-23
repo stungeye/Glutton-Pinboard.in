@@ -10,12 +10,12 @@ class GluttonPinboard
   base_uri "https://api.pinboard.in/#{API_VERSION}/"
   format :xml
   
-  class QueryStatus< StandardError; end
-  class QueryArgument< StandardError; end
-  class Unauthorized < StandardError; end
-  class RateLimite< StandardError; end
-  class NotFound < StandardError; end
-  class UnknownHTTP < StandardError; end
+  class QueryStatus   < StandardError; end
+  class QueryArgument < StandardError; end
+  class Unauthorized  < StandardError; end
+  class RateLimit     < StandardError; end
+  class NotFound      < StandardError; end
+  class UnknownHTTP   < StandardError; end
   
   def initialize( key )
     self.class.default_params :auth_token => key
