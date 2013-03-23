@@ -2,11 +2,16 @@
 
 A simple wrapper for the [pinboard.in](http://pinboard.in) API.
 
+The following methods have been implemented:
+
+* `tags_get` - Retrieves all the tags associated with your account.
+* `posts_all` - Retrieves all the bookmarks associated with your account.
+
+Methods are throttled using the [glutton_ratelimit](https://github.com/stungeye/glutton_ratelimit) gem to conform to the Pinboard.in API specs.
+
 ## Example
 
     pinboard = GluttonPinboard.new 'username:YOUR_AUTH_TOKEN_HERE'
-    
-    require 'pp'
     
     all_my_tags = pinboard.tags_get
     puts "I have used #{all_my_tags.size} tags."
