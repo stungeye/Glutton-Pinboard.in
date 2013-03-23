@@ -4,6 +4,8 @@ require 'glutton_ratelimit'
 
 class GluttonPinboard
   include HTTParty
+  extend GluttonRatelimit
+  
   API_VERSION = 'v1'.freeze
   base_uri "https://api.pinboard.in/#{API_VERSION}/"
   format :xml
@@ -21,7 +23,7 @@ class GluttonPinboard
   
   def q( method, options = {})
     response = self.class.get( method, options)
-    raise_errors(response, method, options)
+    raise_errors(response, method)
     response.parsed_response
   end
   
@@ -33,21 +35,24 @@ class GluttonPinboard
     q('/posts/all')['posts']['post']
   end
   
-  def raise_errors( response, method, options )
+  # Throws custom Errors for specific HTTP responses.
+  def raise_errors( response, method)
     case response.code.to_i
       when 400
-        raise QueryArgument, "#{options.inspect}"
-      when 403
-        raise Unauthorized,  "#{options.inspect}"
+        raise QueryArgument, "method: #{method}"
+      when 401..403
+        raise Unauthorized,  "method: #{method}"
       when 404
-        raise NotFound, options.inspect
+        raise NotFound, "method: #{method}"
       when 429
-        raise RateLimit, "#{option.inspect}"
-      when 200 # Is it overkill to test all successfully received requests like this?
+        raise RateLimit, "method: #{method}"
+      when 200 
         if response.parsed_response.nil? || response.parsed_response.size == 0
-          raise UnknownHTTP, "Received a 200 HTTP response with an empty payload. #{options.inspect}"
+          raise UnknownHTTP, "Received a 200 HTTP response with an empty payload. method: #{method}"
         end
     end
   end
   
+  rate_limit :tags_get, 1, 3    # Limit tag fetching to one call every 3 seconds.
+  rate_limit :posts_all, 1, 305 # Limit all post fetching to one call every 5 minutes.
 end
