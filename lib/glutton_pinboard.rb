@@ -9,6 +9,32 @@ class GluttonPinboard
   base_uri "https://api.pinboard.in/#{API_VERSION}/"
   format :xml
   
+  def initialize( key )
+    # Ask HTTParty to send the auth_token parameter with every request.
+    self.class.default_params :auth_token => key
+  end
+  
+  def q( method, options = {})
+    # Send the HTTP GET request to the API
+    response = self.class.get( method, options)
+    # Process for HTTP error codes
+    raise_errors(response, method)
+    # Return the parsed response.
+    response.parsed_response
+  end
+  
+  # Retrieves all the tags associated with your account.
+  def tags_get
+    q('/tags/get')['tags']['tag']
+  end
+  
+  # Retrieves all the bookmarks associated with your account.
+  def posts_all
+    q('/posts/all')['posts']['post']
+  end
+  
+  # ERROR HANDLING
+  
   class QueryStatus   < StandardError; end
   class QueryArgument < StandardError; end
   class Unauthorized  < StandardError; end
@@ -16,25 +42,8 @@ class GluttonPinboard
   class NotFound      < StandardError; end
   class UnknownHTTP   < StandardError; end
   
-  def initialize( key )
-    self.class.default_params :auth_token => key
-  end
-  
-  def q( method, options = {})
-    response = self.class.get( method, options)
-    raise_errors(response, method)
-    response.parsed_response
-  end
-  
-  def tags_get
-    q('/tags/get')['tags']['tag']
-  end
-  
-  def posts_all
-    q('/posts/all')['posts']['post']
-  end
-  
-  # Throws custom Errors for specific HTTP responses.
+  # Called after every request. Throws the above custom errors
+  # in response to certain HTTP status codes.
   def raise_errors( response, method)
     case response.code.to_i
       when 400
@@ -51,6 +60,8 @@ class GluttonPinboard
         end
     end
   end
+  
+  # RATE LIMITING - Using the glutton_ratelimit gem.
   
   rate_limit :tags_get, 1, 3    # Limit tag fetching to one call every 3 seconds.
   rate_limit :posts_all, 1, 305 # Limit all post fetching to one call every 5 minutes.
