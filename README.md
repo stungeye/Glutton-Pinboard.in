@@ -19,6 +19,14 @@ Methods are throttled using the [glutton_ratelimit](https://github.com/stungeye/
     all_my_posts = pinboard.posts_all
     puts "I have saved #{all_my_posts.size} links."
 
+## Tests
+
+There is a small Minitest spec suite. These test can be run from the root folder:
+
+    rake test
+    
+HTTP requests are mocked for the specs using the [fakeweb](https://github.com/chrisk/fakeweb) gem.
+
 ## Unlicense
 
 This is free and unencumbered software released into the public domain. See UNLICENSE for details.
