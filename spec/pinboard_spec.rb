@@ -21,4 +21,15 @@ describe GluttonPinboard do
       all_posts.size.must_equal 1262
     end
   end
+  
+  describe "when asked to fetch all tags" do
+    
+    stub_get(%r|https://api\.pinboard\.in/v1/tags/get|, "all_tags.xml")
+    
+    it "must respond with an array of tags of a specific size" do
+      all_tags = @pinboard.tags_get
+      all_tags.class.must_equal Array
+      all_tags.size.must_equal 29
+    end
+  end
 end
