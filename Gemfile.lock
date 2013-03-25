@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    fakeweb (1.3.0)
     glutton_ratelimit (0.2.0)
     httparty (0.10.2)
       multi_json (~> 1.0)
@@ -12,5 +13,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  fakeweb (~> 1.3.0)
   glutton_ratelimit
   httparty (~> 0.10.2)
